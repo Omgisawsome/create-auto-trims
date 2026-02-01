@@ -1,24 +1,30 @@
 package revilo.createautoarm;
 
 import net.fabricmc.api.ModInitializer;
-
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import revilo.createautoarm.block.AutoSmithingTableBlockEntity;
 
 public class CreateAutoArmour implements ModInitializer {
-	public static final String MOD_ID = "create-auto-armour";
+    public static final String MOD_ID = "create-auto-armour";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static BlockEntityType<AutoSmithingTableBlockEntity> SMITHING_TABLE_BE;
 
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+    @Override
+    public void onInitialize() {
+        LOGGER.info("Initializing Create Auto Armour");
 
-		LOGGER.info("Hello Fabric world!");
-	}
+        SMITHING_TABLE_BE = Registry.register(
+                BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                new ResourceLocation(MOD_ID, "smithing_table"),
+                FabricBlockEntityTypeBuilder.create(AutoSmithingTableBlockEntity::new, Blocks.SMITHING_TABLE).build()
+        );
+    }
 }
