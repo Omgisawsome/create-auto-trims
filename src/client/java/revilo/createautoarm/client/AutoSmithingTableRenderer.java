@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -24,8 +25,6 @@ public class AutoSmithingTableRenderer extends SmartBlockEntityRenderer<AutoSmit
         long time = be.getLevel().getGameTime();
         float angle = (time + partialTicks) * 2;
 
-        // Render the 3 slots
-        // Positions: Triangle formation on top of the table
         float[][] offsets = {
                 {0.5f, 0.25f},  // Top Center (Template)
                 {0.75f, 0.75f}, // Bottom Right (Base)
@@ -37,11 +36,13 @@ public class AutoSmithingTableRenderer extends SmartBlockEntityRenderer<AutoSmit
 
             ItemStack stack = be.inventory[i].variant.toStack();
             ms.pushPose();
-            ms.translate(offsets[i][0], 1.1, offsets[i][1]);
-            ms.scale(0.4f, 0.4f, 0.4f);
+            ms.translate(offsets[i][0], 1.05, offsets[i][1]); // Moved up slightly to prevent z-fighting
+            ms.scale(0.5f, 0.5f, 0.5f); // Slightly larger
             ms.mulPose(Axis.YP.rotationDegrees(angle));
 
-            mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, be.getLevel(), 0);
+            // FIXED mode usually has better lighting for flat surfaces
+            // We use the block's light level (passed in 'light')
+            mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 
             ms.popPose();
         }

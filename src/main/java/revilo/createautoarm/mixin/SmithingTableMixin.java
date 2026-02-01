@@ -28,7 +28,12 @@ public class SmithingTableMixin implements EntityBlock {
     private void onUse(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof AutoSmithingTableBlockEntity smithingBe) {
-            if (smithingBe.onUse(player, hand)) {
+            // Attempt custom interaction
+            InteractionResult result = smithingBe.onUse(player, hand);
+
+            // If SUCCESS, we handled it -> cancel vanilla.
+            // If PASS, we didn't do anything -> let vanilla open the GUI.
+            if (result == InteractionResult.SUCCESS) {
                 cir.setReturnValue(InteractionResult.SUCCESS);
             }
         }
