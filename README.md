@@ -1,2 +1,2 @@
-# create-auto-trims
-Automatic amour trims with create
+# Create Auto Trims
+Automatic smithing tables with create
